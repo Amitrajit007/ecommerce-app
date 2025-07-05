@@ -1,4 +1,5 @@
 const displayCards = document.querySelector(".products-grid");
+
 let renderCardHtml = "";
 products.forEach((value) => {
   const price = (value.priceCents / 100).toFixed(2);
@@ -49,10 +50,34 @@ products.forEach((value) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">Add to Cart</button>
+          <button class="add-to-cart-button button-primary js_addtocartBtn" data-product-id="${
+            value.id
+          }">Add to Cart</button>
         </div>
     `;
   renderCardHtml += HTML;
 });
 
 displayCards.innerHTML = renderCardHtml;
+
+const addtocartBtn = document.querySelectorAll(".js_addtocartBtn");
+addtocartBtn.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const productId = btn.dataset.productId;
+    let inList;
+    cart.forEach((value) => {
+      if (value.productId === productId) {
+        inList = value;
+      }
+    });
+    if (inList) {
+      inList.quantity++;
+    } else {
+      cart.push({
+        productId: productId,
+        quantity: 1,
+      });
+    }
+    console.log(cart);
+  });
+});
