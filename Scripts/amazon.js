@@ -1,6 +1,12 @@
+// Imports.
+import { cart, addtoCart, updateCart } from "../Scripts/cart.js";
+import { products } from "../data/products.js";
+// variables.
 const displayCards = document.querySelector(".products-grid");
 
 let renderCardHtml = "";
+// funtions
+
 products.forEach((value) => {
   const price = (value.priceCents / 100).toFixed(2);
   const HTML = `
@@ -28,7 +34,7 @@ products.forEach((value) => {
 
           <div class="product-price">$${price}</div>
 
-          <div class="product-quantity-container">
+          <div class="product-quantity-container containerSelector">
             <select>
               <option selected value="1">1</option>
               <option value="2">2</option>
@@ -63,21 +69,8 @@ displayCards.innerHTML = renderCardHtml;
 const addtocartBtn = document.querySelectorAll(".js_addtocartBtn");
 addtocartBtn.forEach((btn) => {
   btn.addEventListener("click", () => {
-    const productId = btn.dataset.productId;
-    let inList;
-    cart.forEach((value) => {
-      if (value.productId === productId) {
-        inList = value;
-      }
-    });
-    if (inList) {
-      inList.quantity++;
-    } else {
-      cart.push({
-        productId: productId,
-        quantity: 1,
-      });
-    }
-    console.log(cart);
+    let cartQuantity = 0;
+    addtoCart(btn);
+    updateCart(cartQuantity);
   });
 });

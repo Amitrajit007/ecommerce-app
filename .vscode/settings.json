@@ -1,0 +1,14 @@
+{
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "comment",
+        "settings": {
+          "foreground": "#85945e", // greyish comments
+          "fontStyle": "bold "
+        }
+      }
+    ]
+  },
+  "editor.semanticHighlighting.enabled": true
+}
