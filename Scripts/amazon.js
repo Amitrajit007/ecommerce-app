@@ -4,6 +4,7 @@ import { products } from "../data/products.js";
 // variables.
 let quantitycartCheckout;
 const displayCards = document.querySelector(".products-grid");
+const cartfistDisplay = document.querySelector(".cart-quantity");
 
 let renderCardHtml = "";
 
@@ -65,16 +66,13 @@ products.forEach((value) => {
     `;
   renderCardHtml += HTML;
 });
-
+cartfistDisplay.innerHTML = JSON.parse(localStorage.getItem("cartQ"));
 displayCards.innerHTML = renderCardHtml;
 
 const addtocartBtn = document.querySelectorAll(".js_addtocartBtn");
 addtocartBtn.forEach((btn) => {
   btn.addEventListener("click", () => {
-    let cartQuantity = 0;
     addtoCart(btn);
-    updateCart(cartQuantity, btn);
-    quantitycartCheckout = updateCart(cartQuantity, btn);
-    console.log(cart);
+    updateCart(btn);
   });
 });

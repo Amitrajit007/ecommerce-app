@@ -1,4 +1,4 @@
-export let cart = [];
+export let cart = JSON.parse(localStorage.getItem("cart")) || [];
 export function addtoCart(btn) {
   const productId = btn.dataset.productId;
   const productContainer = btn.closest(".product-container");
@@ -20,8 +20,9 @@ export function addtoCart(btn) {
   }
 }
 
-export function updateCart(cartQuantity, btn) {
+export function updateCart(btn) {
   const displaycartCount = document.querySelector(".cart-quantity");
+  let cartQuantity = 0;
   cart.forEach((item) => {
     cartQuantity += item.quantity;
   });
@@ -35,4 +36,6 @@ export function updateCart(cartQuantity, btn) {
       added.classList.remove("visableaddeddtoCart");
     }, 2 * 1000);
   });
+  localStorage.setItem("cartQ", JSON.stringify(cartQuantity));
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
