@@ -157,6 +157,7 @@
 }
 @media (max-width: 500px) {
   .cart_resetBtn button {
+    height: 38px;
     margin-top: auto;
     font-size: 0.8em;
     max-width: 100%;
@@ -164,8 +165,9 @@
 }
 @media (max-width: 300px) {
   .cart_resetBtn button {
+    height: 38px;
     margin-top: auto;
-    font-size: 0.6em;
+    font-size: 0.5em;
     max-width: 100%;
   }
 }
