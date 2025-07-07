@@ -1,10 +1,12 @@
 // Imports.
-import { cart, addtoCart, updateCart } from "../Scripts/cart.js";
+import { cart, addtoCart, updateCart } from "./cart.js";
 import { products } from "../data/products.js";
 // variables.
+let quantitycartCheckout;
 const displayCards = document.querySelector(".products-grid");
 
 let renderCardHtml = "";
+
 // funtions
 
 products.forEach((value) => {
@@ -71,6 +73,8 @@ addtocartBtn.forEach((btn) => {
   btn.addEventListener("click", () => {
     let cartQuantity = 0;
     addtoCart(btn);
-    updateCart(cartQuantity);
+    updateCart(cartQuantity, btn);
+    quantitycartCheckout = updateCart(cartQuantity, btn);
+    console.log(cart);
   });
 });

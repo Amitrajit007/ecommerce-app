@@ -20,7 +20,7 @@ export function addtoCart(btn) {
   }
 }
 
-export function updateCart(cartQuantity) {
+export function updateCart(cartQuantity, btn) {
   const displaycartCount = document.querySelector(".cart-quantity");
   cart.forEach((item) => {
     cartQuantity += item.quantity;
