@@ -1,7 +1,9 @@
 import { cart, addtoCart } from "./cart.js";
+import { products } from "../data/products.js";
 
 const displayareaCheckout = document.querySelector(".checkout-grid");
 console.log(cart);
+// order Summery part.
 displayareaCheckout.innerHTML = `
         <div class="payment-summary">
   <div class="payment-summary-title">Order Summary</div>
@@ -34,7 +36,14 @@ displayareaCheckout.innerHTML = `
   <button class="place-order-button button-primary">Place your order</button>
 </div>
 `;
-cart.forEach((item) => {
+cart.forEach((itemCart) => {
+  let matchingProduct;
+  products.forEach((itemProducts) => {
+    if (itemCart.productId === itemProducts.id) {
+      matchingProduct = itemProducts;
+    }
+  });
+  console.log(matchingProduct); //matching product fetching is done .
   displayareaCheckout.innerHTML += `
         <div class="order-summary">
   <div class="cart-item-container">

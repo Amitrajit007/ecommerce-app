@@ -1,4 +1,5 @@
 export let cart = JSON.parse(localStorage.getItem("cart")) || [];
+// variables
 export function addtoCart(btn) {
   const productId = btn.dataset.productId;
   const productContainer = btn.closest(".product-container");

@@ -5,6 +5,7 @@ import { products } from "../data/products.js";
 let quantitycartCheckout;
 const displayCards = document.querySelector(".products-grid");
 const cartfistDisplay = document.querySelector(".cart-quantity");
+const resetCart = document.querySelector(".resetCart");
 
 let renderCardHtml = "";
 
@@ -66,7 +67,7 @@ products.forEach((value) => {
     `;
   renderCardHtml += HTML;
 });
-cartfistDisplay.innerHTML = JSON.parse(localStorage.getItem("cartQ"));
+cartfistDisplay.innerHTML = JSON.parse(localStorage.getItem("cartQ")) || 0;
 displayCards.innerHTML = renderCardHtml;
 
 const addtocartBtn = document.querySelectorAll(".js_addtocartBtn");
@@ -75,4 +76,11 @@ addtocartBtn.forEach((btn) => {
     addtoCart(btn);
     updateCart(btn);
   });
+});
+
+resetCart.addEventListener("click", () => {
+  localStorage.removeItem("cartQ");
+  localStorage.removeItem("cart");
+  cart.length = 0;
+  cartfistDisplay.innerText = `0`; // Update UI count
 });
