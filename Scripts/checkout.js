@@ -1,15 +1,61 @@
 import { cart, addtoCart } from "./cart.js";
 import { products } from "../data/products.js";
-
-const displayareaCheckout = document.querySelector(".checkout-grid");
-console.log(cart);
+// display area have to be separated
+const Summery = document.querySelector(".payment-summary");
+const cards = document.querySelector(".order-summary");
+let itemCounter = 0;
 // order Summery part.
-displayareaCheckout.innerHTML = `
-        <div class="payment-summary">
+Summery.innerHTML = `
+        
   <div class="payment-summary-title">Order Summary</div>
 
   <div class="payment-summary-row">
-    <div>Items (3):</div>
+    <div>Items (${itemCounter || 0}):</div>
+    <div class="payment-summary-money">$00.00</div>
+  </div>
+
+  <div class="payment-summary-row">
+    <div>Shipping &amp; handling:</div>
+    <div class="payment-summary-money">$00.00</div>
+  </div>
+
+  <div class="payment-summary-row subtotal-row">
+    <div>Total before tax:</div>
+    <div class="payment-summary-money">$00.00</div>
+  </div>
+
+  <div class="payment-summary-row">
+    <div>Estimated tax (10%):</div>
+    <div class="payment-summary-money">$00.00</div>
+  </div>
+
+  <div class="payment-summary-row total-row">
+    <div>Opps nothing in the cart.</div>
+  
+  </div>
+  <a href="amazon.html">
+  <button class="place-order-button button-primary">Go for shoping.</button>
+  </a>
+      
+
+`;
+cart.forEach((itemCart) => {
+  itemCounter += itemCart.quantity;
+  let matchingProduct;
+  products.forEach((itemProducts) => {
+    if (itemCart.productId === itemProducts.id) {
+      matchingProduct = itemProducts;
+    }
+  });
+  console.log(matchingProduct); //matching product fetching is done .
+  const price = matchingProduct.priceCents;
+  // the order Summery part
+  Summery.innerHTML = `
+        
+  <div class="payment-summary-title">Order Summary</div>
+
+  <div class="payment-summary-row">
+    <div>Items (${itemCounter || 0}):</div>
     <div class="payment-summary-money">$42.75</div>
   </div>
 
@@ -34,34 +80,28 @@ displayareaCheckout.innerHTML = `
   </div>
 
   <button class="place-order-button button-primary">Place your order</button>
-</div>
+
 `;
-cart.forEach((itemCart) => {
-  let matchingProduct;
-  products.forEach((itemProducts) => {
-    if (itemCart.productId === itemProducts.id) {
-      matchingProduct = itemProducts;
-    }
-  });
-  console.log(matchingProduct); //matching product fetching is done .
-  displayareaCheckout.innerHTML += `
-        <div class="order-summary">
+  cards.innerHTML += `
+
   <div class="cart-item-container">
     <div class="delivery-date">Delivery date: Tuesday, June 21</div>
 
     <div class="cart-item-details-grid">
       <img
         class="product-image"
-        src="images/products/athletic-cotton-socks-6-pairs.jpg"
+        src="${matchingProduct.image}"
       />
 
       <div class="cart-item-details">
         <div class="product-name">
-          Black and Gray Athletic Cotton Socks - 6 Pairs
+          ${matchingProduct.name}
         </div>
-        <div class="product-price">$10.90</div>
+        <div class="product-price">$${(price / 100).toFixed(2)}</div>
         <div class="product-quantity">
-          <span> Quantity: <span class="quantity-label">2</span> </span>
+          <span> Quantity: <span class="quantity-label">${
+            itemCart.quantity
+          }</span> </span>
           <span class="update-quantity-link link-primary"> Update </span>
           <span class="delete-quantity-link link-primary"> Delete </span>
         </div>
@@ -106,6 +146,8 @@ cart.forEach((itemCart) => {
       </div>
     </div>
   </div>
-</div>
+
   `;
 });
+
+// divide the summery and the conationer in their respective contaeiner putting them insde the main html file ---> done.
