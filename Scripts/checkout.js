@@ -4,6 +4,7 @@ import { products } from "../data/products.js";
 const Summery = document.querySelector(".payment-summary");
 const cards = document.querySelector(".order-summary");
 let itemCounter = 0;
+let itemPrice = 0;
 // order Summery part.
 Summery.innerHTML = `
         
@@ -40,6 +41,8 @@ Summery.innerHTML = `
 
 `;
 cart.forEach((itemCart) => {
+  // calculating the price of the total.
+
   itemCounter += itemCart.quantity;
   let matchingProduct;
   products.forEach((itemProducts) => {
@@ -48,6 +51,8 @@ cart.forEach((itemCart) => {
     }
   });
   console.log(matchingProduct); //matching product fetching is done .
+  itemPrice += matchingProduct.priceCents;
+  let totalPrice = ((itemPrice / 100) * itemCart.quantity).toFixed(2);
   const price = matchingProduct.priceCents;
   // the order Summery part
   Summery.innerHTML = `
@@ -56,7 +61,7 @@ cart.forEach((itemCart) => {
 
   <div class="payment-summary-row">
     <div>Items (${itemCounter || 0}):</div>
-    <div class="payment-summary-money">$42.75</div>
+    <div class="payment-summary-money">$${totalPrice}</div>
   </div>
 
   <div class="payment-summary-row">
