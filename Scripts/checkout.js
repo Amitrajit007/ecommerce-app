@@ -1,10 +1,13 @@
 import { cart, addtoCart } from "./cart.js";
 import { products } from "../data/products.js";
 // display area have to be separated
+const CheckoutitemsCount = document.querySelector(".return-to-home-link");
+// Doms
 const Summery = document.querySelector(".payment-summary");
 const cards = document.querySelector(".order-summary");
 let itemCounter = 0;
 let itemPrice = 0;
+let handlingCharge = 4.99;
 // order Summery part.
 Summery.innerHTML = `
         
@@ -44,17 +47,27 @@ cart.forEach((itemCart) => {
   // calculating the price of the total.
 
   itemCounter += itemCart.quantity;
-  let matchingProduct;
-  products.forEach((itemProducts) => {
-    if (itemCart.productId === itemProducts.id) {
-      matchingProduct = itemProducts;
-    }
-  });
-  console.log(matchingProduct); //matching product fetching is done .
-  itemPrice += matchingProduct.priceCents;
-  let totalPrice = ((itemPrice / 100) * itemCart.quantity).toFixed(2);
+  let matchingProduct = products.find((p) => p.id === itemCart.productId);
+  //matching product fetching is done .
+  if (matchingProduct) {
+    let thisitemTotal = matchingProduct.priceCents * itemCart.quantity;
+    itemPrice += thisitemTotal;
+  }
+  // Namings are bit bad fix it sometime.
+
+  // console.log(itemPrice);
+  // TODO: fix the total price its shipping some values.
+
+  let Price = (itemPrice / 100).toFixed(2);
+  let totalPrice = parseFloat(Price);
+  console.log(totalPrice);
   const price = matchingProduct.priceCents;
+  let TotalBeforetax = parseFloat((handlingCharge + totalPrice).toFixed(2));
+  let taxAmount = parseFloat((TotalBeforetax / 10).toFixed(2));
+  let ooderTotal = TotalBeforetax + taxAmount;
   // the order Summery part
+
+  CheckoutitemsCount.innerText = `${itemCounter} items`;
   Summery.innerHTML = `
         
   <div class="payment-summary-title">Order Summary</div>
@@ -66,22 +79,22 @@ cart.forEach((itemCart) => {
 
   <div class="payment-summary-row">
     <div>Shipping &amp; handling:</div>
-    <div class="payment-summary-money">$4.99</div>
+    <div class="payment-summary-money">$${handlingCharge}</div>
   </div>
 
   <div class="payment-summary-row subtotal-row">
     <div>Total before tax:</div>
-    <div class="payment-summary-money">$47.74</div>
+    <div class="payment-summary-money">$${TotalBeforetax}</div>
   </div>
-
+  
   <div class="payment-summary-row">
     <div>Estimated tax (10%):</div>
-    <div class="payment-summary-money">$4.77</div>
+    <div class="payment-summary-money">$${taxAmount}</div>
   </div>
 
   <div class="payment-summary-row total-row">
     <div>Order total:</div>
-    <div class="payment-summary-money">$52.51</div>
+    <div class="payment-summary-money">$${ooderTotal}</div>
   </div>
 
   <button class="place-order-button button-primary">Place your order</button>
