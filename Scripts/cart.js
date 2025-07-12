@@ -37,6 +37,19 @@ export function updateCart(btn) {
       added.classList.remove("visableaddeddtoCart");
     }, 2 * 1000);
   });
-  localStorage.setItem("cartQ", JSON.stringify(cartQuantity));
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// deleting that specific item from the cart.
+
+export function deleteItem(ID) {
+  let index = cart.findIndex((CartItem) => CartItem.productId === ID);
+  let selectedQuantity = cart[index].quantity;
+  if (selectedQuantity === 1) {
+    cart.splice(index, 1);
+    console.log(cart);
+  } else if (selectedQuantity > 1) {
+    cart[index].quantity--;
+  }
   localStorage.setItem("cart", JSON.stringify(cart));
 }
