@@ -1,12 +1,23 @@
 import { cart, deleteItem } from "./cart.js";
 import { products } from "../data/products.js";
-// display area have to be separated
+import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
+import { delivery, changedeliveryDate } from "./delivery.js";
 const CheckoutitemsCount = document.querySelector(".return-to-home-link");
 // Doms
 const Summery = document.querySelector(".payment-summary");
 const cards = document.querySelector(".order-summary");
 
-// order Summery part.
+// delivery date
+const date = dayjs();
+let today = date.format("dddd, MMMM D ");
+let deliveryDate1 = date.add(7, "day");
+let deleverydateFinal1 = deliveryDate1.format("dddd, MMMM D ");
+let deliveryDate2 = date.add(3, "day");
+let deleverydateFinal2 = deliveryDate2.format("dddd, MMMM D ");
+let deliveryDate3 = date.add(1, "day");
+let deleverydateFinal3 = deliveryDate3.format("dddd, MMMM D ");
+
+//updateing the shipping value using the delivery array (module)
 
 function displayContent() {
   let itemCounter = 0;
@@ -40,7 +51,7 @@ function displayContent() {
     cards.innerHTML += `
 
   <div class="cart-item-container">
-    <div class="delivery-date">Delivery date: Tuesday, June 21</div>
+    <div class="delivery-date">Delivery date: <span class="deliveryDisplay">${today}</span></div>
 
     <div class="cart-item-details-grid">
       <img
@@ -71,10 +82,11 @@ function displayContent() {
             type="radio"
             checked
             class="delivery-option-input"
-            name="delivery-option-${matchingProduct.id}"
+            name="${matchingProduct.id}"
+            value="1"
           />
           <div>
-            <div class="delivery-option-date">Tuesday, June 21</div>
+            <div class="delivery-option-date">${deleverydateFinal1}</div>
             <div class="delivery-option-price">FREE Shipping</div>
           </div>
         </div>
@@ -82,10 +94,11 @@ function displayContent() {
           <input
             type="radio"
             class="delivery-option-input"
-            name="delivery-option-${matchingProduct.id}"
+            name="${matchingProduct.id}"
+            value="2"
           />
           <div>
-            <div class="delivery-option-date">Wednesday, June 15</div>
+            <div class="delivery-option-date">${deleverydateFinal2}</div>
             <div class="delivery-option-price">$4.99 - Shipping</div>
           </div>
         </div>
@@ -93,10 +106,11 @@ function displayContent() {
           <input
             type="radio"
             class="delivery-option-input"
-            name="delivery-option-${matchingProduct.id}"
+            name="${matchingProduct.id}"
+            value="3"
           />
           <div>
-            <div class="delivery-option-date">Monday, June 13</div>
+            <div class="delivery-option-date">${deleverydateFinal3}</div>
             <div class="delivery-option-price">$9.99 - Shipping</div>
           </div>
         </div>
@@ -158,3 +172,14 @@ function deleteButton() {
     });
   });
 }
+const deliveryOption = document.querySelectorAll(".delivery-option-input");
+deliveryOption.forEach((radio) => {
+  radio.addEventListener("change", () => {
+    // when the radio buttons are changing this snippet will run.
+    console.log(radio.name);
+    console.log(radio.value);
+    let itemtargetId = radio.name;
+    let itemtargetValue = radio.value;
+    changedeliveryDate(itemtargetId, itemtargetValue, date);
+  });
+});
