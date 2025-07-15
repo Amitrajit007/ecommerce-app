@@ -12,16 +12,36 @@ export const delivery = [
     shipping: 9.99,
   },
 ];
-
+// selected array for adding the preference of Delivry amount along with their ids.
+let selected = [];
 // change the shipping value using function
 
 // change the delivery date using function
-export function changedeliveryDate(id, value, date) {
+export function updateshippingPrice(id, value, date, handlingCharge) {
+  let total = 0;
   let matchingSelection;
   delivery.forEach((d) => {
     if (d.value === value) {
       matchingSelection = d;
     }
   });
-  console.log(matchingSelection);
+  // console.log(matchingSelection);
+  let totalCharge = parseFloat(matchingSelection.shipping);
+  let flag = selected.find((item) => item.id === id);
+  if (flag) {
+    flag.price = totalCharge;
+  } else {
+    selected.push({
+      id: id,
+      price: totalCharge,
+    });
+  }
+  console.log(selected);
+  selected.forEach((select) => {
+    // console.log("selected value:", select.price);
+    total += parseFloat(select.price);
+    handlingCharge = total;
+  });
+
+  return handlingCharge;
 }

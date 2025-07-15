@@ -1,11 +1,87 @@
 import { cart, deleteItem } from "./cart.js";
 import { products } from "../data/products.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
-import { delivery, changedeliveryDate } from "./delivery.js";
+import { delivery, updateshippingPrice } from "./delivery.js";
 const CheckoutitemsCount = document.querySelector(".return-to-home-link");
 // Doms
 const Summery = document.querySelector(".payment-summary");
 const cards = document.querySelector(".order-summary");
+// global scope
+let handlingCharge = JSON.parse(localStorage.getItem("shippingPrice")) || 0;
+let itemCounter = 0;
+let totalPrice = 0;
+let TotalBeforetax = 0;
+let taxAmount = 0;
+let orderTotal = 0;
+// functions
+function displaySummery(
+  itemCounter,
+  totalPrice,
+  handlingCharge,
+  TotalBeforetax,
+  taxAmount,
+  orderTotal
+) {
+  Summery.innerHTML = `
+        
+  <div class="payment-summary-title">Order Summary</div>
+
+  <div class="payment-summary-row">
+    <div>Items (${itemCounter || 0}):</div>
+    <div class="payment-summary-money">$${totalPrice}</div>
+  </div>
+
+  <div class="payment-summary-row">
+    <div>Shipping &amp; handling:</div>
+    <div class="payment-summary-money">$${handlingCharge}</div>
+  </div>
+
+  <div class="payment-summary-row subtotal-row">
+    <div>Total before tax:</div>
+    <div class="payment-summary-money">$${TotalBeforetax}</div>
+  </div>
+  
+  <div class="payment-summary-row">
+    <div>Estimated tax (10%):</div>
+    <div class="payment-summary-money">$${taxAmount}</div>
+  </div>
+
+  <div class="payment-summary-row total-row">
+    <div>Order total:</div>
+    <div class="payment-summary-money">$${orderTotal}</div>
+  </div>
+
+  <button class="place-order-button button-primary">Place your order</button>
+
+`;
+}
+
+function calculateSummary(cart, handlingCharge) {
+  let itemCounter = 0;
+  let itemPrice = 0;
+
+  cart.forEach((itemCart) => {
+    itemCounter += itemCart.quantity;
+    let matchingProduct = products.find((p) => p.id === itemCart.productId);
+    if (matchingProduct) {
+      itemPrice += matchingProduct.priceCents * itemCart.quantity;
+    }
+  });
+
+  let totalPrice = parseFloat((itemPrice / 100).toFixed(2));
+  let TotalBeforetax = parseFloat((handlingCharge + totalPrice).toFixed(2));
+  let taxAmount = parseFloat((TotalBeforetax / 10).toFixed(2));
+  let orderTotal = parseFloat((TotalBeforetax + taxAmount).toFixed(2));
+
+  return {
+    itemCounter,
+    totalPrice,
+    handlingCharge,
+    TotalBeforetax,
+    taxAmount,
+    orderTotal,
+  };
+}
 
 // delivery date
 const date = dayjs();
@@ -20,9 +96,8 @@ let deleverydateFinal3 = deliveryDate3.format("dddd, MMMM D ");
 //updateing the shipping value using the delivery array (module)
 
 function displayContent() {
-  let itemCounter = 0;
   let itemPrice = 0;
-  let handlingCharge = 4.99;
+
   cards.innerHTML = "";
   if (cart.length === 0) {
     CheckoutitemsCount.innerText = `0 items`;
@@ -121,43 +196,15 @@ function displayContent() {
   `;
   });
   // caluculating the summery
-  let Price = (itemPrice / 100).toFixed(2);
-  let totalPrice = parseFloat(Price);
-  let TotalBeforetax = parseFloat((handlingCharge + totalPrice).toFixed(2));
-  let taxAmount = parseFloat((TotalBeforetax / 10).toFixed(2));
-  let orderTotal = parseFloat((TotalBeforetax + taxAmount).toFixed(2));
-  Summery.innerHTML = `
-        
-  <div class="payment-summary-title">Order Summary</div>
-
-  <div class="payment-summary-row">
-    <div>Items (${itemCounter || 0}):</div>
-    <div class="payment-summary-money">$${totalPrice}</div>
-  </div>
-
-  <div class="payment-summary-row">
-    <div>Shipping &amp; handling:</div>
-    <div class="payment-summary-money">$${handlingCharge}</div>
-  </div>
-
-  <div class="payment-summary-row subtotal-row">
-    <div>Total before tax:</div>
-    <div class="payment-summary-money">$${TotalBeforetax}</div>
-  </div>
-  
-  <div class="payment-summary-row">
-    <div>Estimated tax (10%):</div>
-    <div class="payment-summary-money">$${taxAmount}</div>
-  </div>
-
-  <div class="payment-summary-row total-row">
-    <div>Order total:</div>
-    <div class="payment-summary-money">$${orderTotal}</div>
-  </div>
-
-  <button class="place-order-button button-primary">Place your order</button>
-
-`;
+  const summary = calculateSummary(cart, handlingCharge);
+  displaySummery(
+    summary.itemCounter,
+    summary.totalPrice,
+    summary.handlingCharge,
+    summary.TotalBeforetax,
+    summary.taxAmount,
+    summary.orderTotal
+  );
   deleteButton();
 }
 
@@ -175,11 +222,27 @@ function deleteButton() {
 const deliveryOption = document.querySelectorAll(".delivery-option-input");
 deliveryOption.forEach((radio) => {
   radio.addEventListener("change", () => {
-    // when the radio buttons are changing this snippet will run.
-    console.log(radio.name);
-    console.log(radio.value);
     let itemtargetId = radio.name;
     let itemtargetValue = radio.value;
-    changedeliveryDate(itemtargetId, itemtargetValue, date);
+
+    handlingCharge = updateshippingPrice(
+      itemtargetId,
+      itemtargetValue,
+      date,
+      handlingCharge
+    );
+    const summary = calculateSummary(cart, handlingCharge);
+    displaySummery(
+      summary.itemCounter,
+      summary.totalPrice,
+      summary.handlingCharge,
+      summary.TotalBeforetax,
+      summary.taxAmount,
+      summary.orderTotal
+    );
+    localStorage.setItem(
+      "shippingPrice",
+      JSON.stringify(summary.handlingCharge)
+    );
   });
 });
