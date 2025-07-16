@@ -37,6 +37,8 @@ export function updateCart(btn) {
       added.classList.remove("visableaddeddtoCart");
     }, 2 * 1000);
   });
+  localStorage.setItem("cartQ", JSON.stringify(cartQuantity));
+  // plz dont delete it againg ;-)
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 

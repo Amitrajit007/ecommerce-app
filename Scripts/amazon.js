@@ -81,6 +81,7 @@ addtocartBtn.forEach((btn) => {
 resetCart.addEventListener("click", () => {
   localStorage.removeItem("cartQ");
   localStorage.removeItem("cart");
+  localStorage.removeItem("shippingPrice");
   cart.length = 0;
   cartfistDisplay.innerText = `0`; // Update UI count
 });

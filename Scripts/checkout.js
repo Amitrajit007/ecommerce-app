@@ -1,7 +1,11 @@
 import { cart, deleteItem } from "./cart.js";
 import { products } from "../data/products.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
-import { delivery, updateshippingPrice } from "./delivery.js";
+import {
+  delivery,
+  updateshippingPrice,
+  updatedeliveryDate,
+} from "./delivery.js";
 const CheckoutitemsCount = document.querySelector(".return-to-home-link");
 // Doms
 const Summery = document.querySelector(".payment-summary");
@@ -126,7 +130,7 @@ function displayContent() {
     cards.innerHTML += `
 
   <div class="cart-item-container">
-    <div class="delivery-date">Delivery date: <span class="deliveryDisplay">${today}</span></div>
+    <div class="delivery-date">Delivery date: <span class="deliveryDisplay">${deleverydateFinal1}</span></div>
 
     <div class="cart-item-details-grid">
       <img
@@ -244,5 +248,6 @@ deliveryOption.forEach((radio) => {
       "shippingPrice",
       JSON.stringify(summary.handlingCharge)
     );
+    updatedeliveryDate(date, radio, itemtargetValue);
   });
 });
