@@ -38,7 +38,7 @@ export function updateCart(btn) {
     }, 2 * 1000);
   });
   localStorage.setItem("cartQ", JSON.stringify(cartQuantity));
-  // plz dont delete it againg ;-)
+  // plz dont delete it again ;-)
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
