@@ -1,4 +1,6 @@
 ignore.html
 ignore.js
 node_modules
-idk.c++
+idk.cpp
+spec
+.vscode
