@@ -1,5 +1,5 @@
 export let products = [];
-
+// exporting all the datas from the backend.
 export function loadProduct(func) {
   const xhr = new XMLHttpRequest();
   xhr.addEventListener("load", () => {
@@ -8,7 +8,6 @@ export function loadProduct(func) {
   });
   xhr.open("GET", "http://localhost:3000/data");
   xhr.send();
-  console.log(products);
 }
 
 // fron the data in the file.

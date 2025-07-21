@@ -1,32 +1,37 @@
 import { cart, deleteItem } from "./cart.js";
-import { products } from "../data/products.js";
+import { products, loadProduct } from "../data/products.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import {
   delivery,
   updateshippingPrice,
   updatedeliveryDate,
 } from "./delivery.js";
-const CheckoutitemsCount = document.querySelector(".return-to-home-link");
-// Doms
-const Summery = document.querySelector(".payment-summary");
-const cards = document.querySelector(".order-summary");
-// global scope
-let handlingCharge = JSON.parse(localStorage.getItem("shippingPrice")) || 0;
-let itemCounter = 0;
-let totalPrice = 0;
-let TotalBeforetax = 0;
-let taxAmount = 0;
-let orderTotal = 0;
-// functions
-function displaySummery(
-  itemCounter,
-  totalPrice,
-  handlingCharge,
-  TotalBeforetax,
-  taxAmount,
-  orderTotal
-) {
-  Summery.innerHTML = `
+
+loadProduct(checkoutHero);
+
+function checkoutHero() {
+  const CheckoutitemsCount = document.querySelector(".return-to-home-link");
+  // Doms
+  const Summery = document.querySelector(".payment-summary");
+  const cards = document.querySelector(".order-summary");
+  const linktoAmazon = document.querySelector("#linktoAmazon");
+  // global scope
+  let handlingCharge = JSON.parse(localStorage.getItem("shippingPrice")) || 0;
+  let itemCounter = 0;
+  let totalPrice = 0;
+  let TotalBeforetax = 0;
+  let taxAmount = 0;
+  let orderTotal = 0;
+  // functions
+  function displaySummery(
+    itemCounter,
+    totalPrice,
+    handlingCharge,
+    TotalBeforetax,
+    taxAmount,
+    orderTotal
+  ) {
+    Summery.innerHTML = `
         
   <div class="payment-summary-title">Order Summary</div>
 
@@ -58,54 +63,54 @@ function displaySummery(
   <button class="place-order-button button-primary">Place your order</button>
 
 `;
-}
+  }
 
-function calculateSummary(cart, handlingCharge) {
-  let itemCounter = 0;
-  let itemPrice = 0;
+  function calculateSummary(cart, handlingCharge) {
+    let itemCounter = 0;
+    let itemPrice = 0;
 
-  cart.forEach((itemCart) => {
-    itemCounter += itemCart.quantity;
-    let matchingProduct = products.find((p) => p.id === itemCart.productId);
-    if (matchingProduct) {
-      itemPrice += matchingProduct.priceCents * itemCart.quantity;
-    }
-  });
+    cart.forEach((itemCart) => {
+      itemCounter += itemCart.quantity;
+      let matchingProduct = products.find((p) => p.id === itemCart.productId);
+      if (matchingProduct) {
+        itemPrice += matchingProduct.priceCents * itemCart.quantity;
+      }
+    });
 
-  let totalPrice = parseFloat((itemPrice / 100).toFixed(2));
-  let TotalBeforetax = parseFloat((handlingCharge + totalPrice).toFixed(2));
-  let taxAmount = parseFloat((TotalBeforetax / 10).toFixed(2));
-  let orderTotal = parseFloat((TotalBeforetax + taxAmount).toFixed(2));
+    let totalPrice = parseFloat((itemPrice / 100).toFixed(2));
+    let TotalBeforetax = parseFloat((handlingCharge + totalPrice).toFixed(2));
+    let taxAmount = parseFloat((TotalBeforetax / 10).toFixed(2));
+    let orderTotal = parseFloat((TotalBeforetax + taxAmount).toFixed(2));
 
-  return {
-    itemCounter,
-    totalPrice,
-    handlingCharge,
-    TotalBeforetax,
-    taxAmount,
-    orderTotal,
-  };
-}
+    return {
+      itemCounter,
+      totalPrice,
+      handlingCharge,
+      TotalBeforetax,
+      taxAmount,
+      orderTotal,
+    };
+  }
 
-// delivery date
-const date = dayjs();
-let today = date.format("dddd, MMMM D ");
-let deliveryDate1 = date.add(7, "day");
-let deleverydateFinal1 = deliveryDate1.format("dddd, MMMM D ");
-let deliveryDate2 = date.add(3, "day");
-let deleverydateFinal2 = deliveryDate2.format("dddd, MMMM D ");
-let deliveryDate3 = date.add(1, "day");
-let deleverydateFinal3 = deliveryDate3.format("dddd, MMMM D ");
+  // delivery date
+  const date = dayjs();
+  let today = date.format("dddd, MMMM D ");
+  let deliveryDate1 = date.add(7, "day");
+  let deleverydateFinal1 = deliveryDate1.format("dddd, MMMM D ");
+  let deliveryDate2 = date.add(3, "day");
+  let deleverydateFinal2 = deliveryDate2.format("dddd, MMMM D ");
+  let deliveryDate3 = date.add(1, "day");
+  let deleverydateFinal3 = deliveryDate3.format("dddd, MMMM D ");
 
-//updateing the shipping value using the delivery array (module)
+  //updateing the shipping value using the delivery array (module)
 
-function displayContent() {
-  let itemPrice = 0;
+  function displayContent() {
+    let itemPrice = 0;
 
-  cards.innerHTML = "";
-  if (cart.length === 0) {
-    CheckoutitemsCount.innerText = `0 items`;
-    Summery.innerHTML = `
+    cards.innerHTML = "";
+    if (cart.length === 0) {
+      CheckoutitemsCount.innerText = `0 items`;
+      Summery.innerHTML = `
       <div class="payment-summary-title">Order Summary</div>
       <div class="payment-summary-row total-row">
         <div>Oops, nothing in the cart.</div>
@@ -114,20 +119,20 @@ function displayContent() {
         <button class="place-order-button button-primary">Go shopping</button>
       </a>
     `;
-    return;
-  }
-  cart.forEach((itemCart) => {
-    itemCounter += itemCart.quantity;
-    let matchingProduct = products.find((p) => p.id === itemCart.productId);
-    //matching product fetching is done .
-    if (matchingProduct) {
-      let thisitemTotal = matchingProduct.priceCents * itemCart.quantity;
-      itemPrice += thisitemTotal;
+      return;
     }
+    cart.forEach((itemCart) => {
+      itemCounter += itemCart.quantity;
+      let matchingProduct = products.find((p) => p.id === itemCart.productId);
+      //matching product fetching is done .
+      if (matchingProduct) {
+        let thisitemTotal = matchingProduct.priceCents * itemCart.quantity;
+        itemPrice += thisitemTotal;
+      }
 
-    CheckoutitemsCount.innerText = `${itemCounter} items`;
-    const price = matchingProduct.priceCents;
-    cards.innerHTML += `
+      CheckoutitemsCount.innerText = `${itemCounter} items`;
+      const price = matchingProduct.priceCents;
+      cards.innerHTML += `
 
   <div class="cart-item-container">
     <div class="delivery-date">Delivery date: <span class="deliveryDisplay">${deleverydateFinal1}</span></div>
@@ -198,43 +203,8 @@ function displayContent() {
   </div>
 
   `;
-  });
-  // caluculating the summery
-  const summary = calculateSummary(cart, handlingCharge);
-  displaySummery(
-    summary.itemCounter,
-    summary.totalPrice,
-    summary.handlingCharge,
-    summary.TotalBeforetax,
-    summary.taxAmount,
-    summary.orderTotal
-  );
-  deleteButton();
-}
-
-displayContent();
-// divide the summery and the conationer in their respective contaeiner putting them insde the main html file ---> done.
-function deleteButton() {
-  document.querySelectorAll(".deleteLink").forEach((link) => {
-    link.addEventListener("click", () => {
-      const orderId = link.dataset.productId;
-      deleteItem(orderId);
-      displayContent();
     });
-  });
-}
-const deliveryOption = document.querySelectorAll(".delivery-option-input");
-deliveryOption.forEach((radio) => {
-  radio.addEventListener("change", () => {
-    let itemtargetId = radio.name;
-    let itemtargetValue = radio.value;
-
-    handlingCharge = updateshippingPrice(
-      itemtargetId,
-      itemtargetValue,
-      date,
-      handlingCharge
-    );
+    // caluculating the summery
     const summary = calculateSummary(cart, handlingCharge);
     displaySummery(
       summary.itemCounter,
@@ -244,10 +214,48 @@ deliveryOption.forEach((radio) => {
       summary.taxAmount,
       summary.orderTotal
     );
-    localStorage.setItem(
-      "shippingPrice",
-      JSON.stringify(summary.handlingCharge)
-    );
-    updatedeliveryDate(date, radio, itemtargetValue);
+    deleteButton();
+  }
+
+  displayContent();
+  // divide the summery and the conationer in their respective contaeiner putting them insde the main html file ---> done.
+  function deleteButton() {
+    document.querySelectorAll(".deleteLink").forEach((link) => {
+      link.addEventListener("click", () => {
+        const orderId = link.dataset.productId;
+        deleteItem(orderId);
+        displayContent();
+        location.reload();
+        console.log(cart);
+      });
+    });
+  }
+  const deliveryOption = document.querySelectorAll(".delivery-option-input");
+  deliveryOption.forEach((radio) => {
+    radio.addEventListener("change", () => {
+      let itemtargetId = radio.name;
+      let itemtargetValue = radio.value;
+
+      handlingCharge = updateshippingPrice(
+        itemtargetId,
+        itemtargetValue,
+        date,
+        handlingCharge
+      );
+      const summary = calculateSummary(cart, handlingCharge);
+      displaySummery(
+        summary.itemCounter,
+        summary.totalPrice,
+        summary.handlingCharge,
+        summary.TotalBeforetax,
+        summary.taxAmount,
+        summary.orderTotal
+      );
+      localStorage.setItem(
+        "shippingPrice",
+        JSON.stringify(summary.handlingCharge)
+      );
+      updatedeliveryDate(date, radio, itemtargetValue);
+    });
   });
-});
+}

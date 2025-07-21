@@ -8,7 +8,16 @@ const cartfistDisplay = document.querySelector(".cart-quantity");
 const resetCart = document.querySelector(".resetCart");
 
 // funtions
+/*
 loadProduct(amazonHerosection);
+*/
+new Promise((resolve) => {
+  loadProduct(() => {
+    resolve();
+  });
+}).then(() => {
+  amazonHerosection();
+});
 
 function amazonHerosection() {
   let renderCardHtml = "";
