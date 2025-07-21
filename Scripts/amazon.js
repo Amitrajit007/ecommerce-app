@@ -1,19 +1,20 @@
 // Imports.
 import { cart, addtoCart, updateCart } from "./cart.js";
-import { products } from "../data/products.js";
+import { products, loadProduct } from "../data/products.js";
 // variables.
 let quantitycartCheckout;
 const displayCards = document.querySelector(".products-grid");
 const cartfistDisplay = document.querySelector(".cart-quantity");
 const resetCart = document.querySelector(".resetCart");
 
-let renderCardHtml = "";
-
 // funtions
+loadProduct(amazonHerosection);
 
-products.forEach((value) => {
-  const price = (value.priceCents / 100).toFixed(2);
-  const HTML = `
+function amazonHerosection() {
+  let renderCardHtml = "";
+  products.forEach((value) => {
+    const price = (value.priceCents / 100).toFixed(2);
+    const HTML = `
         <div class="product-container">
           <div class="product-image-container">
             <img
@@ -65,23 +66,24 @@ products.forEach((value) => {
           }">Add to Cart</button>
         </div>
     `;
-  renderCardHtml += HTML;
-});
-cartfistDisplay.innerHTML = JSON.parse(localStorage.getItem("cartQ")) || 0;
-displayCards.innerHTML = renderCardHtml;
-
-const addtocartBtn = document.querySelectorAll(".js_addtocartBtn");
-addtocartBtn.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    addtoCart(btn);
-    updateCart(btn);
+    renderCardHtml += HTML;
   });
-});
+  cartfistDisplay.innerHTML = JSON.parse(localStorage.getItem("cartQ")) || 0;
+  displayCards.innerHTML = renderCardHtml;
 
-resetCart.addEventListener("click", () => {
-  localStorage.removeItem("cartQ");
-  localStorage.removeItem("cart");
-  localStorage.removeItem("shippingPrice");
-  cart.length = 0;
-  cartfistDisplay.innerText = `0`; // Update UI count
-});
+  const addtocartBtn = document.querySelectorAll(".js_addtocartBtn");
+  addtocartBtn.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      addtoCart(btn);
+      updateCart(btn);
+    });
+  });
+
+  resetCart.addEventListener("click", () => {
+    localStorage.removeItem("cartQ");
+    localStorage.removeItem("cart");
+    localStorage.removeItem("shippingPrice");
+    cart.length = 0;
+    cartfistDisplay.innerText = `0`; // Update UI count
+  });
+}

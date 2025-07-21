@@ -1,3 +1,18 @@
+export let products = [];
+
+export function loadProduct(func) {
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", () => {
+    products = JSON.parse(xhr.response);
+    func();
+  });
+  xhr.open("GET", "http://localhost:3000/data");
+  xhr.send();
+  console.log(products);
+}
+
+// fron the data in the file.
+/*
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -470,3 +485,4 @@ export const products = [
     keywords: ["sweaters", "hoodies", "apparel", "mens"],
   },
 ];
+*/
